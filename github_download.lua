@@ -103,7 +103,7 @@ end
 
 -- Blacklist Function
 function isBlackListed( path )
-    if path:gmatch("^%.") or blackList:gmatch("@"..path)() ~= nil then
+    if blackList:gmatch("@"..path)() ~= nil then
         return true
     end
 end
