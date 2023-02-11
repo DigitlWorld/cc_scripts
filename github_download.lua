@@ -156,6 +156,7 @@ end
 -- Main Function
 function main( path )
     loadPersonalAccessToken()
+    gBranch = getBranchHash()
     writeCenter("Connecting to Github")
     downloadManager(path)
     for i, data in pairs(fileList.files) do
