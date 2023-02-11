@@ -68,6 +68,18 @@ function downloadFile( path, url, name )
     file.close()
 end
 
+-- Get latest branch hash
+function getBranchHash()
+    local response = http.get("https://api.github.com/repos/"..gUser.."/"..gRepo.."/branches/"..gBranch)
+    if response then
+        response = response.readAll()
+        if response ~= nil then
+            response = textutils.unserializeJSON( response )
+            return response.commit.sha
+        end 
+    end
+end
+
 -- Get Directory Contents
 function getGithubContents( path )
     local pType, pPath, pName, checkPath = {}, {}, {}, {}
