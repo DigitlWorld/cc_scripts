@@ -10,9 +10,11 @@ end
 shell.execute( "/github_download.lua", "DigitlWorld", "cc_scripts", ".", ".", "master")
 
 if fs.exists("/cc_scripts/update.lua") then
+    fs.delete( "/update.lua" )
     fs.copy( "/cc_scripts/update.lua", "/update.lua" )
 end
 
 if fs.exists("/cc_scripts/github_download.lua") then
+    fs.delete( "/github_download.lua" )
     fs.copy( "/cc_scripts/github_download.lua", "/github_download.lua" )
 end
