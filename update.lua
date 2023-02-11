@@ -1,6 +1,6 @@
 -- Root script for getting latest version of the rest of the scripts
 if not fs.exists( "/github_download.lua" ) then
-    shell.execute( "wget", "download", "https://raw.githubusercontent.com/DigitlWorld/cc_scripts/master/github_download.lua", "/github_download.lua")
+    shell.execute( "wget", "https://raw.githubusercontent.com/DigitlWorld/cc_scripts/master/github_download.lua", "/github_download.lua")
 end
 
 if fs.exists( "/cc_scripts") then
