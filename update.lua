@@ -24,18 +24,3 @@ if fs.exists("/cc_scripts/github_download.lua") then
     fs.delete( "/github_download.lua" )
     fs.copy( "/cc_scripts/github_download.lua", "/github_download.lua" )
 end
-
--- test
--- Get latest branch hash
-function getBranchHash()
-    --local response = http.get("https://api.github.com/repos/"..gUser.."/"..gRepo.."/branches/"..gBranch)
-    local response = http.get("https://api.github.com/repos/DigitlWorld/cc_scripts/branches/master")
-    if response then
-        response = response.readAll()
-        if response ~= nil then
-            print(response)
-            response = textutils.unserializeJSON( response )
-            print(response.commit.sha)
-        end 
-    end
-end
