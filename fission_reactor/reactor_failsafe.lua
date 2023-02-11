@@ -1,6 +1,5 @@
 local reactor = peripheral.wrap("back")
 
-local gReactorData = getReactorData(reactor)
 local gRunning = true
 
 function getReactorData( aReactor )
@@ -13,6 +12,8 @@ function getReactorData( aReactor )
         active = aReactor.getStatus()
     }
 end
+
+local gReactorData = getReactorData(reactor)
 
 function renderStatusDisplay()
     local monitor = peripheral.wrap("top")
