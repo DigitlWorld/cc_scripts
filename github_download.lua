@@ -63,7 +63,7 @@ function loadPersonalAccessToken()
         local patFile = fs.open( "/github.pat", "r" )
         if patFile ~= nil then
             gPAT = patFile.readAll()
-            fs.close(patFile)
+            patFile.close()
         end
     end
 end
