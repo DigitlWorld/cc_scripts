@@ -107,7 +107,7 @@ function getGithubContents( path )
             for str in response:gmatch('"name":"([^\"]+)"') do table.insert(pName, str) end
         end
     else
-        writeCenter( "Error: Can't resolve URL" )
+        writeCenter( "Error: Can't resolve URL or Rate Limited" )
         sleep(2)
         term.clear()
         term.setCursorPos(1,1)
@@ -155,6 +155,7 @@ end
 
 -- Main Function
 function main( path )
+    loadPersonalAccessToken()
     writeCenter("Connecting to Github")
     downloadManager(path)
     for i, data in pairs(fileList.files) do
