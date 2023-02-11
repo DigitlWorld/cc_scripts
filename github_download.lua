@@ -93,6 +93,7 @@ function getBranchHash()
             return response.commit.sha
         end 
     end
+    return gBranch
 end
 
 -- Get Directory Contents
