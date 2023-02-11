@@ -1,4 +1,4 @@
-local tArgs, gUser, gRepo, gPath, gBranch = {...}, nil, nil, "", "master"
+local tArgs, gUser, gRepo, gPath, gBranch, gPAT = {...}, nil, nil, "", "master", "NOT_PROVIDED"
 local usage = [[
  github <user> <repo> [path] [remote path] [branch]
  Remote path defaults to the root of the repo.
@@ -57,6 +57,21 @@ function printUsage()
     term.setCursorPos(1,1)
 end
 
+-- Read Personal Access Token
+function loadPersonalAccessToken()
+    if fs.exists( "/github.pat" ) then
+        local patFile = fs.open( "/github.pat", "r" )
+        if patFile ~= nil then
+            gPAT = patFile.readAll()
+            fs.close(patFile)
+        end
+    end
+end
+
+function getAuthHeader()
+    return { ["Authorization"] = "token " .. gPAT }
+end
+
 -- Download File
 function downloadFile( path, url, name )
     writeCenter("Downloading File: "..name)
@@ -70,7 +85,7 @@ end
 
 -- Get latest branch hash
 function getBranchHash()
-    local response = http.get("https://api.github.com/repos/"..gUser.."/"..gRepo.."/branches/"..gBranch)
+    local response = http.get("https://api.github.com/repos/"..gUser.."/"..gRepo.."/branches/"..gBranch, getAuthHeader() )
     if response then
         response = response.readAll()
         if response ~= nil then
@@ -83,7 +98,7 @@ end
 -- Get Directory Contents
 function getGithubContents( path )
     local pType, pPath, pName, checkPath = {}, {}, {}, {}
-    local response = http.get("https://api.github.com/repos/"..gUser.."/"..gRepo.."/contents/"..path.."/?ref="..gBranch)
+    local response = http.get("https://api.github.com/repos/"..gUser.."/"..gRepo.."/contents/"..path.."/?ref="..gBranch, getAuthHeader() )
     if response then
         response = response.readAll()
         if response ~= nil then
