@@ -7,7 +7,7 @@ function writeBar( monitor, x, y, value, maxWidth, foreground, background )
     monitor.setTextColor(foreground)
     monitor.setBackgroundColor(background)
     for i=1,maxWidth do
-        monitor.write(string.char(176))
+        monitor.write(string.char(127))
     end
 
     monitor.setCursorPos(x,y)
