@@ -3,23 +3,13 @@ package.path = "/cc_scripts/?.lua;" .. package.path
 local TextElementBase = require("ui.TextElementBase")
 local Label = require("ui.Label")
 local ValueBar = require("ui.ValueBar")
+local ReactorData = require("fission_reactor.ReactorData")
 
 local reactor = peripheral.wrap("back")
 
 local gRunning = true
 
-function getReactorData( aReactor )
-    return {
-        damagePercent = aReactor.getDamagePercent() / 100,
-        coolantPercent = aReactor.getCoolantFilledPercentage(),
-        heatedCoolantPercent = aReactor.getHeatedCoolantFilledPercentage(),
-        fuelPercent = aReactor.getFuelFilledPercentage(),
-        wastePercent = aReactor.getWasteFilledPercentage(),
-        active = aReactor.getStatus()
-    }
-end
-
-local gReactorData = getReactorData(reactor)
+local gReactorData = ReactorData.new(reactor)
 
 function renderStatusDisplay()
     local monitor = peripheral.wrap("top")
@@ -60,7 +50,7 @@ function renderStatusDisplay()
 
             uiElements.statusLabel:setText( gReactorData.active and "Active" or "Stopped" )
             uiElements.statusLabel:setForegroundColor( gReactorData.active and colors.green or colors.red )
-            
+
             monitor.setTextColor(colors.white)
             monitor.setBackgroundColor(colors.black)
             monitor.clear()
@@ -75,7 +65,7 @@ end
 function monitorReactor()
     while gRunning do
         
-        gReactorData = getReactorData(reactor)
+        gReactorData:update()
         
         if gReactorData.damagePercent > 0 or gReactorData.coolantPercent < 0.8 or gReactorData.wastePercent > 0.8 then
             if reactor.getStatus() then
