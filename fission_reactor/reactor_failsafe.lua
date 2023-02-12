@@ -1,31 +1,11 @@
 package.path = "/cc_scripts/?.lua;" .. package.path
 
 local Label = require("ui.Label")
+local ValueBar = require("ui.ValueBar")
 
 local reactor = peripheral.wrap("back")
 
 local gRunning = true
-
-function writeBar( monitor, x, y, value, maxWidth, foreground, background )
-    monitor.setCursorPos(x,y)
-    monitor.setTextColor(foreground)
-    monitor.setBackgroundColor(background)
-    for i=1,maxWidth do
-        monitor.write(string.char(127))
-    end
-
-    monitor.setCursorPos(x,y)
-    monitor.setTextColor(background)
-    monitor.setBackgroundColor(foreground)
-    for i=1,math.min(value,maxWidth) do
-        monitor.write(" ")
-    end
-end
-
-function writePercentBar( monitor, x, y, value, maxWidth, foreground, background )
-    local scaled = math.floor( value * maxWidth )
-    writeBar(monitor, x, y, scaled, maxWidth, foreground, background)
-end
 
 function getReactorData( aReactor )
     return {
@@ -51,7 +31,21 @@ function renderStatusDisplay()
         local wasteLabel = Label.new( monitor, 1, 4, "Waste" )
         local damageLabel = Label.new( monitor, 1, 5, "Damage" )
 
+        local fuelBar = ValueBar.new( monitor, 11, 1, 20)
+        local coolantBar = ValueBar.new( monitor, 11, 2, 20)
+        local heatedCoolantBar = ValueBar.new( monitor, 11, 3, 20)
+        local wasteBar = ValueBar.new( monitor, 11, 4, 20)
+        local damageBar = ValueBar.new( monitor, 11, 5, 20)
+
         while gRunning do
+
+            -- Update values
+            fuelBar:setValuePercent(gReactorData.fuelPercent)
+            coolantBar:setValuePercent(gReactorData.coolantPercent)
+            heatedCoolantBar:setValuePercent(gReactorData.heatedCoolantPercent)
+            wasteBar:setValuePercent(gReactorData.wastePercent)
+            damageBar:setValuePercent(gReactorData.damagePercent)
+
             monitor.setTextColor(colors.white)
             monitor.setBackgroundColor(colors.black)
             monitor.clear()
@@ -61,12 +55,12 @@ function renderStatusDisplay()
             heatedCoolantLabel:render()
             wasteLabel:render()
             damageLabel:render()
-            
-            writePercentBar( monitor, 11, 1, gReactorData.fuelPercent, 20, colors.green, colors.black)
-            writePercentBar( monitor, 11, 2, gReactorData.coolantPercent, 20, colors.lightBlue, colors.black)
-            writePercentBar( monitor, 11, 3, gReactorData.heatedCoolantPercent, 20, colors.orange, colors.black)
-            writePercentBar( monitor, 11, 4, gReactorData.wastePercent, 20, colors.brown, colors.black)
-            writePercentBar( monitor, 11, 5, gReactorData.damagePercent, 20, colors.red, colors.black)
+
+            fuelBar:render()
+            coolantBar:render()
+            heatedCoolantBar:render()
+            wasteBar:render()
+            damageBar:render()
 
             sleep(1)
         end
