@@ -8,12 +8,13 @@ Label.__index = Label
 function Label.new(monitor, x, y, text)
     local self = setmetatable(TextElementBase.new(monitor, x, y), Label)
     self.text = text
+    print( self.x .. ", " .. self.y .. ", " .. self.text )
     return self
 end
 
 function Label:render()
+    print( self.x .. ", " .. self.y .. ", " .. self.text )
     if monitor then
-        print( self.x .. ", " .. self.y .. ", " .. self.text )
         monitor.setCursorPos(self.x, self.y)
         monitor.setBackgroundColor(self.background)
         monitor.setTextColor(self.foreground)
