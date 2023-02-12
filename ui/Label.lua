@@ -20,12 +20,12 @@ function Label.new(x, y, text)
     local self = setmetatable(TextElementBase.new(x, y), Label)
     self.text = text
     self.blinking = false
+    self.width = 1
     return self
 end
 
 function Label:render(monitor)
     if monitor then
-        monitor.setCursorPos(self.x, self.y)
         if not self.blinking or Label.blinkStep < Label.blinkInterval then
             monitor.setBackgroundColor(self.background)
             monitor.setTextColor(self.foreground)
@@ -33,12 +33,19 @@ function Label:render(monitor)
             monitor.setBackgroundColor(self.foreground)
             monitor.setTextColor(self.background)
         end
+        monitor.setCursorPos(self.x, self.y)
+        monitor.write(string.rep(" ", self.width))
+        monitor.setCursorPos(self.x, self.y)
         monitor.write(self.text)
     end
 end
 
 function Label:setText( text )
     self.text = text
+end
+
+function Label:setWidth( width )
+    self.width = width
 end
 
 function Label:setBlinking( blinking )
