@@ -13,7 +13,11 @@ local gReactorData = ReactorData.new(reactor)
 function renderStatusDisplay()
     local renderArea = window.create(monitor, 12, 1, 25, 25, true)
     local gStatusDisplay = ReactorStatusDisplay.new(gReactorData, renderArea)
+
+    monitor.setTextScale(1)
+    
     while gRunning do
+        monitor.clear()
         gStatusDisplay:render()
         sleep(1)
     end

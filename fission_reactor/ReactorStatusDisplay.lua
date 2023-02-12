@@ -54,8 +54,6 @@ function ReactorStatusDisplay:render()
     self.uiElements.statusLabel:setForegroundColor( self.reactorData.active and colors.green or colors.red )
 
     if self.monitor ~= nil then
-        self.monitor.setTextScale(1)
-
         self.monitor.setTextColor(colors.white)
         self.monitor.setBackgroundColor(colors.black)
         self.monitor.clear()
