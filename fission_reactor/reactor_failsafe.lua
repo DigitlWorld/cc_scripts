@@ -77,7 +77,7 @@ function monitorReactor()
         
         gReactorData = getReactorData(reactor)
         
-        if gReactorData.damagePercent > 0 or gReactorData.coolantPercent < 80 or gReactorData.wastePercent > 80 then
+        if gReactorData.damagePercent > 0 or gReactorData.coolantPercent < 0.8 or gReactorData.wastePercent > 0.8 then
             if reactor.getStatus() then
                 reactor.scram()
             end
