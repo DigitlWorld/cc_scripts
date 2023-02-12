@@ -107,11 +107,27 @@ function FissionStationControl:monitorReactor()
     end
 end
 
+function FissionStationControl:listenForTouch()
+    if self.monitor ~= nil then
+        while true do
+            local event, side, x, y = os.pullEvent("monitor_touch")
+            print( side )
+
+            if self.reactor.getStatus() then
+                self.reactor.scram()
+            else
+                self.reactor.activate()
+            end
+        end
+    end
+end
+
 function FissionStationControl:run()
     local monitorFunc = function() self:monitorReactor() end
     local renderFunc = function() self:renderStatusDisplay() end
+    local inputFunc = function() self:listenForTouch() end
 
-    parallel.waitForAll(monitorFunc, renderFunc)
+    parallel.waitForAll(monitorFunc, renderFunc, inputFunc)
 end
 
 return FissionStationControl
