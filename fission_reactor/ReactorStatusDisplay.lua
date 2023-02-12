@@ -15,19 +15,21 @@ function ReactorStatusDisplay.new(reactorData)
     local barWidth = 15
 
     self.uiElements = {
-        fuelLabel = Label.new( 1, 1, "Fuel" ),
-        coolantLabel = Label.new( 1, 2, "Coolant" ),
-        heatedCoolantLabel = Label.new( 1, 3, "H.Coolant" ),
-        wasteLabel = Label.new( 1, 4, "Waste" ),
-        damageLabel = Label.new( 1, 5, "Damage" ),
+        titleLabel = Label.new( 1, 1, "Fission Reactor" ),
 
-        statusLabel = Label.new( 1, 7, "Stopped" ),
+        fuelLabel = Label.new( 1, 2, "Fuel" ),
+        coolantLabel = Label.new( 1, 3, "Coolant" ),
+        heatedCoolantLabel = Label.new( 1, 4, "H.Coolant" ),
+        wasteLabel = Label.new( 1, 5, "Waste" ),
+        damageLabel = Label.new( 1, 6, "Damage" ),
 
-        fuelBar = ValueBar.new( 11, 1, barWidth),
-        coolantBar = ValueBar.new( 11, 2, barWidth),
-        heatedCoolantBar = ValueBar.new( 11, 3, barWidth),
-        wasteBar = ValueBar.new( 11, 4, barWidth),
-        damageBar = ValueBar.new( 11, 5, barWidth)
+        statusLabel = Label.new( 1, 8, "Stopped" ),
+
+        fuelBar = ValueBar.new( 11, 2, barWidth),
+        coolantBar = ValueBar.new( 11, 3, barWidth),
+        heatedCoolantBar = ValueBar.new( 11, 4, barWidth),
+        wasteBar = ValueBar.new( 11, 5, barWidth),
+        damageBar = ValueBar.new( 11, 6, barWidth)
     }
 
     self.uiElements.fuelBar:setForegroundColor( colors.green )
