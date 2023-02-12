@@ -1,8 +1,5 @@
 package.path = "/cc_scripts/?.lua;" .. package.path
 
-local TextElementBase = require("ui.TextElementBase")
-local Label = require("ui.Label")
-local ValueBar = require("ui.ValueBar")
 local ReactorData = require("fission_reactor.ReactorData")
 local ReactorStatusDisplay = require("fission_reactor.ReactorStatusDisplay")
 
@@ -12,9 +9,10 @@ local monitor = peripheral.wrap("top")
 local gRunning = true
 
 local gReactorData = ReactorData.new(reactor)
-local gStatusDisplay = ReactorStatusDisplay.new(gReactorData, monitor)
 
 function renderStatusDisplay()
+    local renderArea = window.create(monitor, 12, 1, 25, 25, true)
+    local gStatusDisplay = ReactorStatusDisplay.new(gReactorData, renderArea)
     while gRunning do
         gStatusDisplay:render()
         sleep(1)

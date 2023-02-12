@@ -13,7 +13,7 @@ function ReactorStatusDisplay.new(reactorData, monitor)
         monitor = monitor
     }, ReactorStatusDisplay)
 
-    local barWidth = 20
+    local barWidth = 15
     if monitor ~= nil then
         self.uiElements = {
             fuelLabel = Label.new( monitor, 1, 1, "Fuel" ),
@@ -55,7 +55,7 @@ function ReactorStatusDisplay:render()
 
     if self.monitor ~= nil then
         self.monitor.setTextScale(1)
-        
+
         self.monitor.setTextColor(colors.white)
         self.monitor.setBackgroundColor(colors.black)
         self.monitor.clear()
