@@ -12,7 +12,7 @@ function TurbineData.new(turbine)
 end
 
 function TurbineData:update()
-    self.storedEnergyPercent = self.turbine.getTotalEnergyFilledPercentage()
+    self.storedEnergyPercent = self.turbine.getEnergyFilledPercentage()
     self.steamPercent = self.turbine.getSteamFilledPercentage()
 end
 

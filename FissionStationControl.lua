@@ -88,3 +88,5 @@ function FissionStationControl:run()
 
     parallel.waitForAll(monitorFunc, renderFunc)
 end
+
+return FissionStationControl
