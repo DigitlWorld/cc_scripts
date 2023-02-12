@@ -37,6 +37,7 @@ function ValueBar:setValue( value )
 end
 
 function ValueBar:setValuePercent( percent )
+    percent = percent or 0
     local scaled = math.floor( percent * self.width )
     self:setValue(scaled)
 end

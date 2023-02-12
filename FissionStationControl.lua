@@ -19,6 +19,7 @@ function FissionStationControl.new(reactor, boiler, turbine, monitor)
         turbine = turbine,
         monitor = monitor,
         reactorData = nil,
+        boilerData = nil,
         turbineData = nil
     }, FissionStationControl)
 
@@ -49,7 +50,7 @@ function FissionStationControl:renderStatusDisplay()
         end
 
         if self.boiler ~= nil then
-            boilerStatusDisplay = TurbineStatusDisplay.new(self.boilerData)
+            boilerStatusDisplay = BoilerStatusDisplay.new(self.boilerData)
         end
 
         if self.turbine ~= nil then
@@ -73,7 +74,7 @@ function FissionStationControl:renderStatusDisplay()
             if turbineStatusDisplay ~= nil then
                 turbineStatusDisplay:render(turbineRenderArea)
             end
-            sleep(1)
+            sleep(0.1)
         end
     end
 end

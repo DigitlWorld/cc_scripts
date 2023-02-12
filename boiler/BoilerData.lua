@@ -14,10 +14,10 @@ function BoilerData.new(boiler)
 end
 
 function BoilerData:update()
-    self.heatedCoolantPercent = self.reactor.getHeatedCoolantFilledPercentage()
-    self.waterPercent = self.reactor.getWaterFilledPercentage()
-    self.steamPercent = self.reactor.getSteamFilledPercentage()
-    self.coolantPercent = self.reactor.getCoolantFilledPercentage()
+    self.heatedCoolantPercent = self.boiler.getHeatedCoolantFilledPercentage()
+    self.waterPercent = self.boiler.getWaterFilledPercentage()
+    self.steamPercent = self.boiler.getSteamFilledPercentage()
+    self.coolantPercent = self.boiler.getCooledCoolantFilledPercentage()
 end
 
 return BoilerData
