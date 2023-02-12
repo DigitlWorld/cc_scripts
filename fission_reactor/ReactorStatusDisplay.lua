@@ -35,6 +35,8 @@ function ReactorStatusDisplay.new(reactorData)
     self.uiElements.titleLabel:setWidth(25)
     self.uiElements.titleLabel:setColors(colors.gray, colors.black)
 
+    self.uiElements.statusLabel:setBlinking( true )
+
     self.uiElements.fuelBar:setForegroundColor( colors.green )
     self.uiElements.coolantBar:setForegroundColor( colors.lightBlue )
     self.uiElements.heatedCoolantBar:setForegroundColor( colors.orange )
@@ -55,7 +57,7 @@ function ReactorStatusDisplay:render(monitor)
 
     self.uiElements.wasteLabel:setBlinking( self.reactorData.wastePercent > 0.7 )
 
-    self.uiElements.statusLabel:setText( self.reactorData.active and "Active" or "Stopped" )
+    self.uiElements.statusLabel:setText( self.reactorData.active and "ACTIVE" or "INACTIVE" )
     self.uiElements.statusLabel:setForegroundColor( self.reactorData.active and colors.green or colors.red )
 
     if monitor ~= nil then
