@@ -9,6 +9,8 @@ local BoilerStatusDisplay = require("boiler.BoilerStatusDisplay")
 local TurbineData = require("turbine.TurbineData")
 local TurbineStatusDisplay = require("turbine.TurbineStatusDisplay")
 
+local Label = require("ui.Label")
+
 local FissionStationControl = {}
 FissionStationControl.__index = FissionStationControl
 
@@ -64,6 +66,7 @@ function FissionStationControl:renderStatusDisplay()
         self.monitor.setTextScale(1)
 
         while true do
+            Label.doBlink()
             self.monitor.clear()
             if reactorStatusDisplay ~= nil then
                 reactorStatusDisplay:render(reactorRenderArea)

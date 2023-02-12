@@ -50,6 +50,8 @@ function ReactorStatusDisplay:render(monitor)
     self.uiElements.wasteBar:setValuePercent(self.reactorData.wastePercent)
     self.uiElements.damageBar:setValuePercent(self.reactorData.damagePercent)
 
+    self.uiElements.wasteLabel:setBlinking( self.reactorData.wastePercent > 0.7 )
+
     self.uiElements.statusLabel:setText( self.reactorData.active and "Active" or "Stopped" )
     self.uiElements.statusLabel:setForegroundColor( self.reactorData.active and colors.green or colors.red )
 
