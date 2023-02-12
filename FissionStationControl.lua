@@ -3,15 +3,19 @@ package.path = "/cc_scripts/?.lua;" .. package.path
 local ReactorData = require("fission_reactor.ReactorData")
 local ReactorStatusDisplay = require("fission_reactor.ReactorStatusDisplay")
 
+local BoilerData = require("boiler.BoilerData")
+local BoilerStatusDisplay = require("boiler.BoilerStatusDisplay")
+
 local TurbineData = require("turbine.TurbineData")
 local TurbineStatusDisplay = require("turbine.TurbineStatusDisplay")
 
 local FissionStationControl = {}
 FissionStationControl.__index = FissionStationControl
 
-function FissionStationControl.new(reactor, turbine, monitor)
+function FissionStationControl.new(reactor, boiler, turbine, monitor)
     local self = setmetatable({
         reactor = reactor,
+        boiler = boiler,
         turbine = turbine,
         monitor = monitor,
         reactorData = nil,
@@ -20,6 +24,10 @@ function FissionStationControl.new(reactor, turbine, monitor)
 
     if self.reactor ~= nil then
         self.reactorData = ReactorData.new(self.reactor)
+    end
+
+    if self.boiler ~= nil then
+        self.boilerData = BoilerData.new(self.boiler)
     end
 
     if self.turbine ~= nil then
@@ -33,10 +41,15 @@ function FissionStationControl:renderStatusDisplay()
     if self.monitor ~= nil then
         
         local reactorStatusDisplay = nil;
+        local boilerStatusDisplay = nil;
         local turbineStatusDisplay = nil;
         
         if self.reactor ~= nil then
             reactorStatusDisplay = ReactorStatusDisplay.new(self.reactorData)
+        end
+
+        if self.boiler ~= nil then
+            boilerStatusDisplay = TurbineStatusDisplay.new(self.boilerData)
         end
 
         if self.turbine ~= nil then
@@ -44,7 +57,8 @@ function FissionStationControl:renderStatusDisplay()
         end
 
         local reactorRenderArea = window.create(self.monitor, 1, 1, 25, 25, true)
-        local turbineRenderArea = window.create(self.monitor, 27, 1, 25, 25, true)
+        local boilerRenderArea = window.create(self.monitor, 27, 1, 25, 25, true)
+        local turbineRenderArea = window.create(self.monitor, 27, 7, 25, 25, true)
         
         self.monitor.setTextScale(1)
 
@@ -52,6 +66,9 @@ function FissionStationControl:renderStatusDisplay()
             self.monitor.clear()
             if reactorStatusDisplay ~= nil then
                 reactorStatusDisplay:render(reactorRenderArea)
+            end
+            if boilerStatusDisplay ~= nil then
+                boilerStatusDisplay:render(boilerRenderArea)
             end
             if turbineStatusDisplay ~= nil then
                 turbineStatusDisplay:render(turbineRenderArea)
@@ -72,6 +89,10 @@ function FissionStationControl:monitorReactor()
                     self.reactor.scram()
                 end
             end
+        end
+
+        if self.boiler ~= nil then
+            self.boilerData:update()
         end
 
         if self.turbine ~= nil then
