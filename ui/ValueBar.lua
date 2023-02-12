@@ -5,28 +5,28 @@ local TextElementBase = require("ui.TextElementBase")
 local ValueBar = setmetatable({}, {__index = TextElementBase})
 ValueBar.__index = ValueBar
 
-function ValueBar.new(monitor, x, y, width)
-    local self = setmetatable(TextElementBase.new(monitor, x, y), ValueBar)
+function ValueBar.new(x, y, width)
+    local self = setmetatable(TextElementBase.new(x, y), ValueBar)
     self.width = width
     self.value = 0
     return self
 end
 
-function ValueBar:render()
-    if self.monitor then
-        self.monitor.setCursorPos(self.x, self.y)
+function ValueBar:render(monitor)
+    if monitor then
+        monitor.setCursorPos(self.x, self.y)
         
-        self.monitor.setTextColor(self.foreground)
-        self.monitor.setBackgroundColor(self.background)
+        monitor.setTextColor(self.foreground)
+        monitor.setBackgroundColor(self.background)
         for i=1,self.width do
-            self.monitor.write(string.char(127))
+            monitor.write(string.char(127))
         end
     
-        self.monitor.setCursorPos(self.x, self.y)
-        self.monitor.setTextColor(self.background)
-        self.monitor.setBackgroundColor(self.foreground)
+        monitor.setCursorPos(self.x, self.y)
+        monitor.setTextColor(self.background)
+        monitor.setBackgroundColor(self.foreground)
         for i=1,math.min(self.value,self.width) do
-            self.monitor.write(" ")
+            monitor.write(" ")
         end
         
     end

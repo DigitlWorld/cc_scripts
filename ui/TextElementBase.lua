@@ -1,9 +1,8 @@
 local TextElementBase = {}
 TextElementBase.__index = TextElementBase
 
-function TextElementBase.new(monitor, x, y)
+function TextElementBase.new(x, y)
     local self = setmetatable({
-        monitor = monitor,
         x = x or 0,
         y = y or 0,
         background = colors.black,
@@ -13,13 +12,13 @@ function TextElementBase.new(monitor, x, y)
     return self
 end
 
-function TextElementBase.renderAll( table )
+function TextElementBase.renderAll( monitor, table )
     for k, v in pairs(table) do
-        v:render()
+        v:render(monitor)
     end
 end
 
-function TextElementBase:render()
+function TextElementBase:render(monitor)
     -- nop
 end
 
