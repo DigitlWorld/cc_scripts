@@ -13,6 +13,12 @@ function TextElementBase.new(monitor, x, y)
     return self
 end
 
+function TextElementBase.renderAll( table )
+    for k, v in pairs(table) do
+        v:render()
+    end
+end
+
 function TextElementBase:render()
     -- nop
 end
@@ -23,6 +29,11 @@ end
 
 function TextElementBase:setForegroundColor( color )
     self.foreground = color
+end
+
+function TextElementBase:setColors( background, foreground )
+    self.background = background
+    self.foreground = foreground
 end
 
 return TextElementBase
