@@ -4,61 +4,20 @@ local TextElementBase = require("ui.TextElementBase")
 local Label = require("ui.Label")
 local ValueBar = require("ui.ValueBar")
 local ReactorData = require("fission_reactor.ReactorData")
+local ReactorStatusDisplay = require("fission_reactor.ReactorStatusDisplay")
 
 local reactor = peripheral.wrap("back")
+local monitor = peripheral.wrap("top")
 
 local gRunning = true
 
 local gReactorData = ReactorData.new(reactor)
+local gStatusDisplay = ReactorStatusDisplay.new(gReactorData, monitor)
 
 function renderStatusDisplay()
-    local monitor = peripheral.wrap("top")
-    local barWidth = 20
-    if monitor ~= nil then
-        monitor.setTextScale(1)
-
-        local uiElements = {
-            fuelLabel = Label.new( monitor, 1, 1, "Fuel" ),
-            coolantLabel = Label.new( monitor, 1, 2, "Coolant" ),
-            heatedCoolantLabel = Label.new( monitor, 1, 3, "H.Coolant" ),
-            wasteLabel = Label.new( monitor, 1, 4, "Waste" ),
-            damageLabel = Label.new( monitor, 1, 5, "Damage" ),
-
-            statusLabel = Label.new( monitor, 1, 7, "Stopped" ),
-
-            fuelBar = ValueBar.new( monitor, 11, 1, barWidth),
-            coolantBar = ValueBar.new( monitor, 11, 2, barWidth),
-            heatedCoolantBar = ValueBar.new( monitor, 11, 3, barWidth),
-            wasteBar = ValueBar.new( monitor, 11, 4, barWidth),
-            damageBar = ValueBar.new( monitor, 11, 5, barWidth)
-        }
-
-        uiElements.fuelBar:setForegroundColor( colors.green )
-        uiElements.coolantBar:setForegroundColor( colors.blue )
-        uiElements.heatedCoolantBar:setForegroundColor( colors.orange )
-        uiElements.wasteBar:setForegroundColor( colors.brown )
-        uiElements.damageBar:setForegroundColor( colors.red )
-
-        while gRunning do
-
-            -- Update values
-            uiElements.fuelBar:setValuePercent(gReactorData.fuelPercent)
-            uiElements.coolantBar:setValuePercent(gReactorData.coolantPercent)
-            uiElements.heatedCoolantBar:setValuePercent(gReactorData.heatedCoolantPercent)
-            uiElements.wasteBar:setValuePercent(gReactorData.wastePercent)
-            uiElements.damageBar:setValuePercent(gReactorData.damagePercent)
-
-            uiElements.statusLabel:setText( gReactorData.active and "Active" or "Stopped" )
-            uiElements.statusLabel:setForegroundColor( gReactorData.active and colors.green or colors.red )
-
-            monitor.setTextColor(colors.white)
-            monitor.setBackgroundColor(colors.black)
-            monitor.clear()
-
-            TextElementBase.renderAll(uiElements)
-
-            sleep(1)
-        end
+    while gRunning do
+        gStatusDisplay:render()
+        sleep(1)
     end
 end
 
