@@ -23,3 +23,5 @@ end
 function Label:setText( text )
     self.text = text
 end
+
+return Label

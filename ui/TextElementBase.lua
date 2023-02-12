@@ -24,3 +24,5 @@ end
 function TextElementBase:setForegroundColor( color )
     self.foreground = color
 end
+
+return TextElementBase
