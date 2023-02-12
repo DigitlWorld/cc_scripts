@@ -34,6 +34,8 @@ function renderStatusDisplay()
             wasteLabel = Label.new( monitor, 1, 4, "Waste" ),
             damageLabel = Label.new( monitor, 1, 5, "Damage" ),
 
+            statusLabel = Label.new( monitor, 1, 7, "Stopped" ),
+
             fuelBar = ValueBar.new( monitor, 11, 1, barWidth),
             coolantBar = ValueBar.new( monitor, 11, 2, barWidth),
             heatedCoolantBar = ValueBar.new( monitor, 11, 3, barWidth),
@@ -56,6 +58,9 @@ function renderStatusDisplay()
             uiElements.wasteBar:setValuePercent(gReactorData.wastePercent)
             uiElements.damageBar:setValuePercent(gReactorData.damagePercent)
 
+            uiElements.statusLabel:setText( gReactorData.active and "Active" or "Stopped" )
+            uiElements.statusLabel:setForegroundColor( gReactorData.active and colors.green or colors.red )
+            
             monitor.setTextColor(colors.white)
             monitor.setBackgroundColor(colors.black)
             monitor.clear()
