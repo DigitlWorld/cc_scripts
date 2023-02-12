@@ -1,3 +1,5 @@
+local Label = require("cc_scripts.ui.Label")
+
 local reactor = peripheral.wrap("back")
 
 local gRunning = true
@@ -40,26 +42,23 @@ function renderStatusDisplay()
     local monitor = peripheral.wrap("top")
     if monitor ~= nil then
         monitor.setTextScale(1)
+
+        local fuelLabel = Label.new( monitor, 1, 1, "Fuel" )
+        local coolantLabel = Label.new( monitor, 1, 2, "Coolant" )
+        local heatedCoolantLabel = Label.new( monitor, 1, 3, "H.Coolant" )
+        local wasteLabel = Label.new( monitor, 1, 4, "Waste" )
+        local damageLabel = Label.new( monitor, 1, 5, "Damage" )
+
         while gRunning do
             monitor.setTextColor(colors.white)
             monitor.setBackgroundColor(colors.black)
-            
             monitor.clear()
 
-            monitor.setCursorPos(1,1)
-            monitor.write("Fuel      ")
-
-            monitor.setCursorPos(1,2)
-            monitor.write("Coolant   ")
-            
-            monitor.setCursorPos(1,3)
-            monitor.write("H.Coolant ")
-            
-            monitor.setCursorPos(1,4)
-            monitor.write("Waste     ")
-
-            monitor.setCursorPos(1,5)
-            monitor.write("Damage    ")
+            fuelLabel:render()
+            coolantLabel:render()
+            heatedCoolantLabel:render()
+            wasteLabel:render()
+            damageLabel:render()
             
             writePercentBar( monitor, 11, 1, gReactorData.fuelPercent, 20, colors.green, colors.black)
             writePercentBar( monitor, 11, 2, gReactorData.coolantPercent, 20, colors.lightBlue, colors.black)
