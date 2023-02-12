@@ -28,6 +28,9 @@ function BoilerStatusDisplay.new(boilerData)
         coolantBar = ValueBar.new( 11, 5, barWidth),
     }
 
+    self.uiElements.titleLabel:setWidth(25)
+    self.uiElements.titleLabel:setColors(colors.gray, colors.black)
+
     self.uiElements.heatedCoolantBar:setForegroundColor( colors.orange )
     self.uiElements.waterBar:setForegroundColor( colors.blue )
     self.uiElements.steamBar:setForegroundColor( colors.white )

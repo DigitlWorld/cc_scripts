@@ -32,6 +32,9 @@ function ReactorStatusDisplay.new(reactorData)
         damageBar = ValueBar.new( 11, 6, barWidth)
     }
 
+    self.uiElements.titleLabel:setWidth(25)
+    self.uiElements.titleLabel:setColors(colors.gray, colors.black)
+
     self.uiElements.fuelBar:setForegroundColor( colors.green )
     self.uiElements.coolantBar:setForegroundColor( colors.lightBlue )
     self.uiElements.heatedCoolantBar:setForegroundColor( colors.orange )

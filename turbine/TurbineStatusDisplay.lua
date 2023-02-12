@@ -24,6 +24,9 @@ function TurbineStatusDisplay.new(turbineData)
         powerBar = ValueBar.new( 11, 3, barWidth),
     }
 
+    self.uiElements.titleLabel:setWidth(25)
+    self.uiElements.titleLabel:setColors(colors.gray, colors.black)
+
     self.uiElements.steamBar:setForegroundColor( colors.white )
     self.uiElements.powerBar:setForegroundColor( colors.lime )
 
