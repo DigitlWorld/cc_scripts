@@ -1,4 +1,6 @@
-local TextElementBase = require("cc_scripts.ui.TextElementBase")
+package.path = "/cc_scripts/?.lua;" .. package.path
+
+local TextElementBase = require("ui.TextElementBase")
 
 local Label = setmetatable({}, {__index = TextElementBase})
 Label.__index = Label

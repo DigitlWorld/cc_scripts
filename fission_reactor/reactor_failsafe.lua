@@ -1,4 +1,6 @@
-local Label = require("cc_scripts.ui.Label")
+package.path = "/cc_scripts/?.lua;" .. package.path
+
+local Label = require("ui.Label")
 
 local reactor = peripheral.wrap("back")
 
