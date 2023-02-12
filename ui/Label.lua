@@ -13,6 +13,7 @@ end
 
 function Label:render()
     if monitor then
+        print( self.x .. ", " .. self.y .. ", " .. self.text )
         monitor.setCursorPos(self.x, self.y)
         monitor.setBackgroundColor(self.background)
         monitor.setTextColor(self.foreground)
