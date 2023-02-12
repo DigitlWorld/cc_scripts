@@ -8,7 +8,7 @@ function getReactorData( aReactor )
         coolantPercent = aReactor.getCoolantFilledPercentage() * 100,
         heatedCoolantPercent = aReactor.getHeatedCoolantFilledPercentage() * 100,
         fuelPercent = aReactor.getFuelFilledPercentage() * 100,
-        wastePercent = aReactor.getWasteFilledPercentage(),
+        wastePercent = aReactor.getWasteFilledPercentage() * 100,
         active = aReactor.getStatus()
     }
 end
