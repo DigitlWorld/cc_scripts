@@ -33,7 +33,7 @@ function ReactorStatusDisplay.new(reactorData)
     }
 
     self.uiElements.fuelBar:setForegroundColor( colors.green )
-    self.uiElements.coolantBar:setForegroundColor( colors.blue )
+    self.uiElements.coolantBar:setForegroundColor( colors.lightBlue )
     self.uiElements.heatedCoolantBar:setForegroundColor( colors.orange )
     self.uiElements.wasteBar:setForegroundColor( colors.brown )
     self.uiElements.damageBar:setForegroundColor( colors.red )
