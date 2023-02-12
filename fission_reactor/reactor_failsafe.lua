@@ -2,13 +2,34 @@ local reactor = peripheral.wrap("back")
 
 local gRunning = true
 
+function writeBar( monitor, x, y, value, maxWidth, foreground, background )
+    monitor.setCursorPos(x,y)
+    monitor.setTextColor(foreground)
+    monitor.setBackgroundColor(background)
+    for i=1,maxWidth do
+        monitor.write(string.char(176))
+    end
+
+    monitor.setCursorPos(x,y)
+    monitor.setTextColor(background)
+    monitor.setBackgroundColor(foreground)
+    for i=1,math.min(value,maxWidth) do
+        monitor.write(" ")
+    end
+end
+
+function writePercentBar( monitor, x, y, value, maxWidth, foreground, background )
+    local scaled = math.floor( value * maxWidth )
+    writeBar(monitor, x, y, scaled, maxWidth, foreground, background)
+end
+
 function getReactorData( aReactor )
     return {
-        damagePercent = aReactor.getDamagePercent(),
-        coolantPercent = aReactor.getCoolantFilledPercentage() * 100,
-        heatedCoolantPercent = aReactor.getHeatedCoolantFilledPercentage() * 100,
-        fuelPercent = aReactor.getFuelFilledPercentage() * 100,
-        wastePercent = aReactor.getWasteFilledPercentage() * 100,
+        damagePercent = aReactor.getDamagePercent() / 100,
+        coolantPercent = aReactor.getCoolantFilledPercentage(),
+        heatedCoolantPercent = aReactor.getHeatedCoolantFilledPercentage(),
+        fuelPercent = aReactor.getFuelFilledPercentage(),
+        wastePercent = aReactor.getWasteFilledPercentage(),
         active = aReactor.getStatus()
     }
 end
@@ -20,23 +41,32 @@ function renderStatusDisplay()
     if monitor ~= nil then
         monitor.setTextScale(1)
         while gRunning do
+            monitor.setTextColor(colors.white)
+            monitor.setBackgroundColor(colors.black)
+            
             monitor.clear()
 
             monitor.setCursorPos(1,1)
-            monitor.write("Fuel:      " .. gReactorData.fuelPercent)
+            monitor.write("Fuel      ")
 
             monitor.setCursorPos(1,2)
-            monitor.write("Coolant:   " .. gReactorData.coolantPercent)
+            monitor.write("Coolant   ")
             
             monitor.setCursorPos(1,3)
-            monitor.write("H.Coolant: " .. gReactorData.heatedCoolantPercent)
+            monitor.write("H.Coolant ")
             
             monitor.setCursorPos(1,4)
-            monitor.write("Waste:     " .. gReactorData.wastePercent)
+            monitor.write("Waste     ")
 
             monitor.setCursorPos(1,5)
-            monitor.write("Damage:    " .. gReactorData.damagePercent)
+            monitor.write("Damage    ")
             
+            writePercentBar( monitor, 11, 1, gReactorData.fuelPercent, 20, colors.green, colors.black)
+            writePercentBar( monitor, 11, 2, gReactorData.coolantPercent, 20, colors.lightBlue, colors.black)
+            writePercentBar( monitor, 11, 3, gReactorData.heatedCoolantPercent, 20, colors.orange, colors.black)
+            writePercentBar( monitor, 11, 4, gReactorData.wastePercent, 20, colors.brown, colors.black)
+            writePercentBar( monitor, 11, 5, gReactorData.damagePercent, 20, colors.red, colors.black)
+
             sleep(1)
         end
     end
@@ -47,7 +77,7 @@ function monitorReactor()
         
         gReactorData = getReactorData(reactor)
         
-        if gReactorData.damagePercent > 0 or gReactorData.coolantPercent < 80 then
+        if gReactorData.damagePercent > 0 or gReactorData.coolantPercent < 80 or gReactorData.wastePercent > 80 then
             if reactor.getStatus() then
                 reactor.scram()
             end
