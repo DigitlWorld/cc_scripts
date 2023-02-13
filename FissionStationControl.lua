@@ -64,7 +64,8 @@ function FissionStationControl:renderStatusDisplay()
         local turbineRenderArea = window.create(self.monitor, 27, 7, 25, 25, true)
         
         self.monitor.setTextScale(1)
-
+        Label.setBlinkInterval(10)
+        
         while true do
             Label.doBlink()
             self.monitor.clear()
