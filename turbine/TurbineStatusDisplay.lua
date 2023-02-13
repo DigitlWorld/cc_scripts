@@ -44,6 +44,8 @@ function TurbineStatusDisplay:render(monitor)
     self.uiElements.steamBar:setValuePercent(self.turbineData.steamPercent)
     self.uiElements.powerBar:setValuePercent(self.turbineData.storedEnergyPercent)
 
+    self.uiElements.outputLabel:setValue( self.turbineData.productionRate )
+
     if monitor ~= nil then
         monitor.setTextColor(colors.white)
         monitor.setBackgroundColor(colors.black)
