@@ -21,7 +21,7 @@ function TurbineStatusDisplay.new(turbineData)
         steamLabel = Label.new( 1, 2, "Steam" ),
         powerLabel = Label.new( 1, 3, "Power" ),
 
-        outputLabel = ValueLabel.new( 1, 5, "FE/t" ),
+        outputLabel = ValueLabel.new( 1, 5, "J/t" ),
 
         steamBar = ValueBar.new( 11, 2, barWidth),
         powerBar = ValueBar.new( 11, 3, barWidth),
