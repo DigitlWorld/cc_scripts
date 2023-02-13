@@ -9,20 +9,25 @@ local BoilerStatusDisplay = require("boiler.BoilerStatusDisplay")
 local TurbineData = require("turbine.TurbineData")
 local TurbineStatusDisplay = require("turbine.TurbineStatusDisplay")
 
+local InductionMatrixData = require("induction_matrix.InductionMatrixData")
+local InductionMatrixStatusDisplay = require("induction_matrix.InductionMatrixStatusDisplay")
+
 local Label = require("ui.Label")
 
 local FissionStationControl = {}
 FissionStationControl.__index = FissionStationControl
 
-function FissionStationControl.new(reactor, boiler, turbine, monitor)
+function FissionStationControl.new(reactor, boiler, turbine, matrix, monitor)
     local self = setmetatable({
         reactor = reactor,
         boiler = boiler,
         turbine = turbine,
+        matrix = matrix,
         monitor = monitor,
         reactorData = nil,
         boilerData = nil,
-        turbineData = nil
+        turbineData = nil,
+        matrixData = nil
     }, FissionStationControl)
 
     if self.reactor ~= nil then
@@ -37,6 +42,10 @@ function FissionStationControl.new(reactor, boiler, turbine, monitor)
         self.turbineData = TurbineData.new(self.turbine)
     end
 
+    if self.matrix ~= nil then
+        self.matrixData = InductionMatrixData.new(self.matrix)
+    end
+
     return self
 end
 
@@ -46,6 +55,7 @@ function FissionStationControl:renderStatusDisplay()
         local reactorStatusDisplay = nil;
         local boilerStatusDisplay = nil;
         local turbineStatusDisplay = nil;
+        local matrixStatusDisplay = nil;
         
         if self.reactor ~= nil then
             reactorStatusDisplay = ReactorStatusDisplay.new(self.reactorData)
@@ -59,9 +69,14 @@ function FissionStationControl:renderStatusDisplay()
             turbineStatusDisplay = TurbineStatusDisplay.new(self.turbineData)
         end
 
+        if self.matrix ~= nil then
+            matrixStatusDisplay = InductionMatrixStatusDisplay.new(self.matrixData)
+        end
+
         local reactorRenderArea = window.create(self.monitor, 1, 1, 25, 25, true)
         local boilerRenderArea = window.create(self.monitor, 27, 1, 25, 25, true)
         local turbineRenderArea = window.create(self.monitor, 27, 7, 25, 25, true)
+        local matrixRenderArea = window.create(self.monitor, 53, 1, 25, 25, true)
         
         self.monitor.setTextScale(1)
         Label.setBlinkInterval(10)
@@ -78,6 +93,9 @@ function FissionStationControl:renderStatusDisplay()
             if turbineStatusDisplay ~= nil then
                 turbineStatusDisplay:render(turbineRenderArea)
             end
+            if matrixStatusDisplay ~= nil then
+                matrixStatusDisplay:render(matrixRenderArea)
+            end
             sleep(0.05)
         end
     end
@@ -85,6 +103,18 @@ end
 
 function FissionStationControl:monitorReactor()
     while true do
+
+        if self.boiler ~= nil then
+            self.boilerData:update()
+        end
+
+        if self.turbine ~= nil then
+            self.turbineData:update()
+        end
+
+        if self.matrix ~= nil then
+            self.matrixData:update()
+        end
 
         if self.reactor ~= nil then
             self.reactorData:update()
@@ -94,14 +124,6 @@ function FissionStationControl:monitorReactor()
                     self.reactor.scram()
                 end
             end
-        end
-
-        if self.boiler ~= nil then
-            self.boilerData:update()
-        end
-
-        if self.turbine ~= nil then
-            self.turbineData:update()
         end
 
         sleep(0.05)
