@@ -65,7 +65,7 @@ function FissionStationControl:renderStatusDisplay()
         
         self.monitor.setTextScale(1)
         Label.setBlinkInterval(10)
-        
+
         while true do
             Label.doBlink()
             self.monitor.clear()
@@ -112,7 +112,6 @@ function FissionStationControl:listenForTouch()
     if self.monitor ~= nil then
         while true do
             local event, side, x, y = os.pullEvent("monitor_touch")
-            print( side )
 
             if self.reactor.getStatus() then
                 self.reactor.scram()
