@@ -18,8 +18,8 @@ end
 
 function Label.setBlinkInterval( interval )
     if interval > 0 then
-        self.blinkStep = 0
-        self.blinkInterval = interval
+        Label.blinkStep = 0
+        Label.blinkInterval = interval
     end
 end
 
