@@ -84,7 +84,7 @@ function FissionStationControl:renderStatusDisplay()
         end
 
         if self.heater ~= nil then
-            heaterStatusDisplay = InductionMatrixStatusDisplay.new(self.heaterData)
+            heaterStatusDisplay = ResistiveHeaterStatusDisplay.new(self.heaterData)
         end
 
         local reactorRenderArea = window.create(self.monitor, 1, 1, 25, 25, true)
