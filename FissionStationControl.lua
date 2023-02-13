@@ -77,7 +77,7 @@ function FissionStationControl:renderStatusDisplay()
             if turbineStatusDisplay ~= nil then
                 turbineStatusDisplay:render(turbineRenderArea)
             end
-            sleep(0.1)
+            sleep(0.05)
         end
     end
 end
@@ -103,7 +103,7 @@ function FissionStationControl:monitorReactor()
             self.turbineData:update()
         end
 
-        sleep(0.1)
+        sleep(0.05)
     end
 end
 
