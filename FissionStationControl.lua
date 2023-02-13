@@ -12,22 +12,27 @@ local TurbineStatusDisplay = require("turbine.TurbineStatusDisplay")
 local InductionMatrixData = require("induction_matrix.InductionMatrixData")
 local InductionMatrixStatusDisplay = require("induction_matrix.InductionMatrixStatusDisplay")
 
+local ResistiveHeaterData = require("resistive_heater.ResistiveHeaterData")
+local ResistiveHeaterStatusDisplay = require("resistive_heater.ResistiveHeaterStatusDisplay")
+
 local Label = require("ui.Label")
 
 local FissionStationControl = {}
 FissionStationControl.__index = FissionStationControl
 
-function FissionStationControl.new(reactor, boiler, turbine, matrix, monitor)
+function FissionStationControl.new(reactor, boiler, turbine, matrix, heater, monitor)
     local self = setmetatable({
         reactor = reactor,
         boiler = boiler,
         turbine = turbine,
         matrix = matrix,
+        heater = heater,
         monitor = monitor,
         reactorData = nil,
         boilerData = nil,
         turbineData = nil,
-        matrixData = nil
+        matrixData = nil,
+        heaterData = nil
     }, FissionStationControl)
 
     if self.reactor ~= nil then
@@ -46,6 +51,10 @@ function FissionStationControl.new(reactor, boiler, turbine, matrix, monitor)
         self.matrixData = InductionMatrixData.new(self.matrix)
     end
 
+    if self.heater ~= nil then
+        self.heaterData = InductionMatrixData.new(self.heater)
+    end
+
     return self
 end
 
@@ -56,6 +65,7 @@ function FissionStationControl:renderStatusDisplay()
         local boilerStatusDisplay = nil;
         local turbineStatusDisplay = nil;
         local matrixStatusDisplay = nil;
+        local heaterStatusDisplay = nil;
         
         if self.reactor ~= nil then
             reactorStatusDisplay = ReactorStatusDisplay.new(self.reactorData)
@@ -73,10 +83,15 @@ function FissionStationControl:renderStatusDisplay()
             matrixStatusDisplay = InductionMatrixStatusDisplay.new(self.matrixData)
         end
 
+        if self.heater ~= nil then
+            heaterStatusDisplay = InductionMatrixStatusDisplay.new(self.heaterData)
+        end
+
         local reactorRenderArea = window.create(self.monitor, 1, 1, 25, 25, true)
         local boilerRenderArea = window.create(self.monitor, 27, 1, 25, 25, true)
         local turbineRenderArea = window.create(self.monitor, 27, 7, 25, 25, true)
         local matrixRenderArea = window.create(self.monitor, 53, 1, 25, 25, true)
+        local heaterRenderArea = window.create(self.monitor, 53, 7, 25, 25, true)
         
         self.monitor.setTextScale(1)
         Label.setBlinkInterval(10)
@@ -96,6 +111,9 @@ function FissionStationControl:renderStatusDisplay()
             if matrixStatusDisplay ~= nil then
                 matrixStatusDisplay:render(matrixRenderArea)
             end
+            if heaterStatusDisplay ~= nil then
+                heaterStatusDisplay:render(heaterRenderArea)
+            end
             sleep(0.05)
         end
     end
@@ -114,6 +132,10 @@ function FissionStationControl:monitorReactor()
 
         if self.matrix ~= nil then
             self.matrixData:update()
+        end
+
+        if self.heater ~= nil then
+            self.heaterData:update()
         end
 
         if self.reactor ~= nil then
