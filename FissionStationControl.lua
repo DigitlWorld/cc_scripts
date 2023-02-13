@@ -119,6 +119,12 @@ function FissionStationControl:renderStatusDisplay()
     end
 end
 
+function FissionStationControl:shutdownStation()
+    if self.reactor.getStatus() then
+        self.reactor.scram()
+    end
+end
+
 function FissionStationControl:monitorReactor()
     while true do
 
@@ -136,15 +142,27 @@ function FissionStationControl:monitorReactor()
 
         if self.heater ~= nil then
             self.heaterData:update()
+
+            if self.turbine ~= nil then
+                local prodRate = self.turbineData.productionRate
+                local prodRatex2 = prodRate * 2
+                if self.matrixData == nil or self.matrixData.energyNeeded < prodRatex2 then
+                    self.heater.setEnergyUsage( prodRate )
+                else
+                    self.heater.setEnergyUsage( 0.0 )
+                end
+            end
         end
 
         if self.reactor ~= nil then
             self.reactorData:update()
             
             if self.reactorData.damagePercent > 0 or self.reactorData.coolantPercent < 0.8 or self.reactorData.wastePercent > 0.8 then
-                if self.reactor.getStatus() then
-                    self.reactor.scram()
-                end
+                self:shutdownStation()
+            end
+
+            if self.turbine ~= nil and self.turbineData.storedEnergyPercent > 0.75 then
+                self:shutdownStation()
             end
         end
 
