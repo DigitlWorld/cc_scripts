@@ -24,7 +24,7 @@ function Label.new(x, y, text)
     return self
 end
 
-function Label:render(monitor)
+function Label:preRender(monitor)
     if monitor then
         if not self.blinking or Label.blinkStep < Label.blinkInterval then
             monitor.setBackgroundColor(self.background)
@@ -36,6 +36,12 @@ function Label:render(monitor)
         monitor.setCursorPos(self.x, self.y)
         monitor.write(string.rep(" ", self.width))
         monitor.setCursorPos(self.x, self.y)
+    end
+end
+
+function Label:render(monitor)
+    self:preRender(monitor)
+    if monitor then
         monitor.write(self.text)
     end
 end
