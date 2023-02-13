@@ -151,6 +151,10 @@ function FissionStationControl:monitorReactor()
                 else
                     self.heater.setEnergyUsage( 0.0 )
                 end
+
+                if self.turbineData.storedEnergyPercent > 0 then
+                    self.heater.setEnergyUsage( prodRate * 1.5 )
+                end
             end
         end
 
