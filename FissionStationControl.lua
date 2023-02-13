@@ -52,7 +52,7 @@ function FissionStationControl.new(reactor, boiler, turbine, matrix, heater, mon
     end
 
     if self.heater ~= nil then
-        self.heaterData = InductionMatrixData.new(self.heater)
+        self.heaterData = ResistiveHeaterData.new(self.heater)
     end
 
     return self
