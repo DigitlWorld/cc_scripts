@@ -142,7 +142,8 @@ function FissionStationControl:monitorReactor()
 
         if self.heater ~= nil then
             self.heaterData:update()
-
+            
+            -- Bleed logic
             if self.turbine ~= nil then
                 local prodRate = self.turbineData.productionRate
                 local prodRatex2 = prodRate * 2
@@ -153,7 +154,14 @@ function FissionStationControl:monitorReactor()
                 end
 
                 if self.turbineData.storedEnergyPercent > 0 then
+                    -- Drain the turbine
                     self.heater.setEnergyUsage( prodRate * 1.5 )
+                elseif self.matrixData == nil then
+                    -- If no storage available, permadrain
+                    self.heater.setEnergyUsage( prodRate )
+                else
+                    -- Storage available and turbine empty
+                    self.heater.setEnergyUsage( 0.0 )
                 end
             end
         end
