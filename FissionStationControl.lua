@@ -94,7 +94,6 @@ function FissionStationControl:renderStatusDisplay()
         local heaterRenderArea = window.create(self.monitor, 53, 7, 25, 25, true)
         
         self.monitor.setTextScale(1)
-        Label.setBlinkInterval(10)
 
         while true do
             Label.doBlink()
@@ -114,7 +113,7 @@ function FissionStationControl:renderStatusDisplay()
             if heaterStatusDisplay ~= nil then
                 heaterStatusDisplay:render(heaterRenderArea)
             end
-            sleep(0.05)
+            sleep(0.1)
         end
     end
 end
