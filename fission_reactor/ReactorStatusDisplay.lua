@@ -1,5 +1,3 @@
-package.path = "/cc_scripts/?.lua;" .. package.path
-
 local TextElementBase = require("ui.TextElementBase")
 local Label = require("ui.Label")
 local ValueBar = require("ui.ValueBar")

@@ -1,5 +1,3 @@
-package.path = "/cc_scripts/?.lua;" .. package.path
-
 local ReactorData = require("fission_reactor.ReactorData")
 local ReactorStatusDisplay = require("fission_reactor.ReactorStatusDisplay")
 

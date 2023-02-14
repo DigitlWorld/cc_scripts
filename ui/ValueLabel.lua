@@ -1,5 +1,3 @@
-package.path = "/cc_scripts/?.lua;" .. package.path
-
 local Label = require("ui.Label")
 
 local ValueLabel = setmetatable({}, {__index = Label})
