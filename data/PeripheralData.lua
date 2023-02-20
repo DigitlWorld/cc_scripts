@@ -15,7 +15,7 @@ function PeripheralData.new(wrappedPeripheral)
 end
 
 function PeripheralData:isAvailable()
-    return self.wrappedPeripheral ~= nil
+    return self ~= nil and self.wrappedPeripheral ~= nil
 end
 
 function PeripheralData:getPeripheral()

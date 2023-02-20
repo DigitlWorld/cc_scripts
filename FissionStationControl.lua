@@ -1,3 +1,5 @@
+local PeripheralData = require("data.PeripheralData")
+
 local ReactorData = require("fission_reactor.ReactorData")
 local ReactorStatusDisplay = require("fission_reactor.ReactorStatusDisplay")
 
@@ -20,11 +22,6 @@ FissionStationControl.__index = FissionStationControl
 
 function FissionStationControl.new(reactor, boiler, turbine, matrix, heater, monitor)
     local self = setmetatable({
-        reactor = reactor,
-        boiler = boiler,
-        turbine = turbine,
-        matrix = matrix,
-        heater = heater,
         monitor = monitor,
         reactorData = nil,
         boilerData = nil,
@@ -33,24 +30,24 @@ function FissionStationControl.new(reactor, boiler, turbine, matrix, heater, mon
         heaterData = nil
     }, FissionStationControl)
 
-    if self.reactor ~= nil then
-        self.reactorData = ReactorData.new(self.reactor)
+    if reactor ~= nil then
+        self.reactorData = ReactorData.new(reactor)
     end
 
-    if self.boiler ~= nil then
-        self.boilerData = BoilerData.new(self.boiler)
+    if boiler ~= nil then
+        self.boilerData = BoilerData.new(boiler)
     end
 
-    if self.turbine ~= nil then
-        self.turbineData = TurbineData.new(self.turbine)
+    if turbine ~= nil then
+        self.turbineData = TurbineData.new(turbine)
     end
 
-    if self.matrix ~= nil then
-        self.matrixData = InductionMatrixData.new(self.matrix)
+    if matrix ~= nil then
+        self.matrixData = InductionMatrixData.new(matrix)
     end
 
-    if self.heater ~= nil then
-        self.heaterData = ResistiveHeaterData.new(self.heater)
+    if heater ~= nil then
+        self.heaterData = ResistiveHeaterData.new(heater)
     end
 
     return self
@@ -65,23 +62,23 @@ function FissionStationControl:renderStatusDisplay()
         local matrixStatusDisplay = nil;
         local heaterStatusDisplay = nil;
         
-        if self.reactor ~= nil then
+        if self.reactorData ~= nil then
             reactorStatusDisplay = ReactorStatusDisplay.new(self.reactorData)
         end
 
-        if self.boiler ~= nil then
+        if self.boilerData ~= nil then
             boilerStatusDisplay = BoilerStatusDisplay.new(self.boilerData)
         end
 
-        if self.turbine ~= nil then
+        if self.turbineData ~= nil then
             turbineStatusDisplay = TurbineStatusDisplay.new(self.turbineData)
         end
 
-        if self.matrix ~= nil then
+        if self.matrixData ~= nil then
             matrixStatusDisplay = InductionMatrixStatusDisplay.new(self.matrixData)
         end
 
-        if self.heater ~= nil then
+        if self.heaterData ~= nil then
             heaterStatusDisplay = ResistiveHeaterStatusDisplay.new(self.heaterData)
         end
 
@@ -117,64 +114,70 @@ function FissionStationControl:renderStatusDisplay()
 end
 
 function FissionStationControl:shutdownStation()
-    if self.reactor.getStatus() then
-        self.reactor.scram()
+    if self.reactorData:isAvailable() and self.reactorData:getPeripheral().getStatus() then
+        self.reactorData:getPeripheral().scram()
     end
 end
 
 function FissionStationControl:monitorReactor()
     while true do
 
-        if self.boiler ~= nil then
+        if self.boilerData ~= nil then
             self.boilerData:update()
         end
 
-        if self.turbine ~= nil then
+        if self.turbineData ~= nil then
             self.turbineData:update()
         end
 
-        if self.matrix ~= nil then
+        if self.matrixData ~= nil then
             self.matrixData:update()
         end
 
-        if self.heater ~= nil then
+        if self.heaterData ~= nil then
             self.heaterData:update()
             
-            -- Bleed logic
-            if self.turbine ~= nil then
-                local prodRate = self.turbineData.productionRate
-                local prodRatex2 = prodRate * 2
-                if self.matrixData == nil or self.matrixData.energyNeeded < prodRatex2 then
-                    self.heater.setEnergyUsage( prodRate )
-                else
-                    self.heater.setEnergyUsage( 0.0 )
-                end
+            if PeripheralData.isAvailable(self.heaterData) then
+                local heater = self.heaterData:getPeripheral()
 
-                if self.turbineData.storedEnergyPercent > 0 then
-                    -- Drain the turbine
-                    self.heater.setEnergyUsage( prodRate * 1.5 )
-                elseif self.matrixData == nil then
-                    -- If no storage available, permadrain
-                    self.heater.setEnergyUsage( prodRate )
-                else
-                    -- Storage available and turbine empty
-                    self.heater.setEnergyUsage( 0.0 )
+                -- Bleed logic
+                if PeripheralData.isAvailable(self.turbineData) then
+                    local prodRate = self.turbineData.productionRate
+                    local prodRatex2 = prodRate * 2
+                    if PeripheralData.isAvailable(self.matrixData) or self.matrixData.energyNeeded < prodRatex2 then
+                        heater.setEnergyUsage( prodRate )
+                    else
+                        heater.setEnergyUsage( 0.0 )
+                    end
+
+                    if self.turbineData.storedEnergyPercent > 0 then
+                        -- Drain the turbine
+                        heater.setEnergyUsage( prodRate * 1.5 )
+                    elseif not PeripheralData.isAvailable(self.matrixData) then
+                        -- If no storage available, permadrain
+                        heater.setEnergyUsage( prodRate )
+                    else
+                        -- Storage available and turbine empty
+                        heater.setEnergyUsage( 0.0 )
+                    end
                 end
             end
         end
 
-        if self.reactor ~= nil then
+        if self.reactorData ~= nil then
             self.reactorData:update()
-            
-            if self.reactorData.damagePercent > 0 or self.reactorData.coolantPercent < 0.8 or self.reactorData.wastePercent > 0.8 then
-                self:shutdownStation()
-            end
 
-            if self.turbine ~= nil and self.turbineData.storedEnergyPercent > 0.75 then
-                self:shutdownStation()
+            if PeripheralData.isAvailable(self.reactorData) then
+                
+                if self.reactorData.damagePercent > 0 or self.reactorData.coolantPercent < 0.8 or self.reactorData.wastePercent > 0.8 then
+                    self:shutdownStation()
+                end
+
+                if self.turbine ~= nil and self.turbineData.storedEnergyPercent > 0.75 then
+                    self:shutdownStation()
+                end
             end
         end
-
         sleep(0.05)
     end
 end
@@ -184,10 +187,13 @@ function FissionStationControl:listenForTouch()
         while true do
             local event, side, x, y = os.pullEvent("monitor_touch")
 
-            if self.reactor.getStatus() then
-                self.reactor.scram()
-            else
-                self.reactor.activate()
+            if self.reactorData ~= nil and PeripheralData.isAvailable(self.reactorData) then
+                local reactor = self.reactor:getPeripheral()
+                if reactor.getStatus() then
+                    reactor.scram()
+                else
+                    reactor.activate()
+                end
             end
         end
     end
