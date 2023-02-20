@@ -173,11 +173,13 @@ function FissionStationControl:monitorReactor()
                     self:shutdownStation()
                 end
 
-                if self.turbine ~= nil and self.turbineData.storedEnergyPercent > 0.75 then
+                -- Not safe to run if the turbine data isn't available, or is getting full.
+                if not PeripheralData.isAvailable(self.turbineData) or self.turbineData.storedEnergyPercent > 0.75 then
                     self:shutdownStation()
                 end
             end
         end
+
         sleep(0.05)
     end
 end
