@@ -30,6 +30,10 @@ function ReactorStatusDisplay.new(reactorData)
         damageBar = ValueBar.new( 11, 6, barWidth)
     }
 
+    self.offlineLabel = Label.new( 1, 2, "NO CONNECTION" )
+    self.offlineLabel:setColors(colors.black, colors.red)
+    self.offlineLabel:setBlinking(true)
+
     self.uiElements.titleLabel:setWidth(25)
     self.uiElements.titleLabel:setColors(colors.gray, colors.black)
 
@@ -45,25 +49,29 @@ function ReactorStatusDisplay.new(reactorData)
 end
 
 function ReactorStatusDisplay:render(monitor)
-
-    -- Update values
-    self.uiElements.fuelBar:setValuePercent(self.reactorData.fuelPercent)
-    self.uiElements.coolantBar:setValuePercent(self.reactorData.coolantPercent)
-    self.uiElements.heatedCoolantBar:setValuePercent(self.reactorData.heatedCoolantPercent)
-    self.uiElements.wasteBar:setValuePercent(self.reactorData.wastePercent)
-    self.uiElements.damageBar:setValuePercent(self.reactorData.damagePercent)
-
-    self.uiElements.wasteLabel:setBlinking( self.reactorData.wastePercent > 0.7 )
-
-    self.uiElements.statusLabel:setText( self.reactorData.active and "ACTIVE" or "INACTIVE" )
-    self.uiElements.statusLabel:setForegroundColor( self.reactorData.active and colors.green or colors.red )
-
     if monitor ~= nil then
         monitor.setTextColor(colors.white)
         monitor.setBackgroundColor(colors.black)
         monitor.clear()
 
-        TextElementBase.renderAll(monitor, self.uiElements)
+        if self.reactorData:isAvailable() then
+            -- Update values
+            self.uiElements.fuelBar:setValuePercent(self.reactorData.fuelPercent)
+            self.uiElements.coolantBar:setValuePercent(self.reactorData.coolantPercent)
+            self.uiElements.heatedCoolantBar:setValuePercent(self.reactorData.heatedCoolantPercent)
+            self.uiElements.wasteBar:setValuePercent(self.reactorData.wastePercent)
+            self.uiElements.damageBar:setValuePercent(self.reactorData.damagePercent)
+
+            self.uiElements.wasteLabel:setBlinking( self.reactorData.wastePercent > 0.7 )
+
+            self.uiElements.statusLabel:setText( self.reactorData.active and "ACTIVE" or "INACTIVE" )
+            self.uiElements.statusLabel:setForegroundColor( self.reactorData.active and colors.green or colors.red )
+
+            TextElementBase.renderAll(monitor, self.uiElements)
+        else
+            self.uiElements.titleLabel:render(monitor)
+            self.offlineLabel:render(monitor)
+        end
     end 
 end
 

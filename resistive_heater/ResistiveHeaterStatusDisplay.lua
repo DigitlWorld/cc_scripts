@@ -22,6 +22,10 @@ function ResistiveHeaterStatusDisplay.new(heaterData)
 
     }
 
+    self.offlineLabel = Label.new( 1, 2, "NO CONNECTION" )
+    self.offlineLabel:setColors(colors.black, colors.red)
+    self.offlineLabel:setBlinking(true)
+
     self.uiElements.titleLabel:setWidth(25)
     self.uiElements.titleLabel:setColors(colors.gray, colors.black)
 
@@ -31,16 +35,19 @@ function ResistiveHeaterStatusDisplay.new(heaterData)
 end
 
 function ResistiveHeaterStatusDisplay:render(monitor)
-
-    -- Update values
-    self.uiElements.energyUsageLabel:setValue(self.heaterData.energyUsage)
-
     if monitor ~= nil then
         monitor.setTextColor(colors.white)
         monitor.setBackgroundColor(colors.black)
         monitor.clear()
 
-        TextElementBase.renderAll(monitor, self.uiElements)
+        if self.heaterData:isAvailable() then
+            -- Update values
+            self.uiElements.energyUsageLabel:setValue(self.heaterData.energyUsage)
+            TextElementBase.renderAll(monitor, self.uiElements)
+        else
+            self.uiElements.titleLabel:render(monitor)
+            self.offlineLabel:render(monitor)
+        end
     end 
 end
 

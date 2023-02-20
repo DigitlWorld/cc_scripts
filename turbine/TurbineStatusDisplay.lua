@@ -25,6 +25,10 @@ function TurbineStatusDisplay.new(turbineData)
         powerBar = ValueBar.new( 11, 3, barWidth),
     }
 
+    self.offlineLabel = Label.new( 1, 2, "NO CONNECTION" )
+    self.offlineLabel:setColors(colors.black, colors.red)
+    self.offlineLabel:setBlinking(true)
+
     self.uiElements.titleLabel:setWidth(25)
     self.uiElements.titleLabel:setColors(colors.gray, colors.black)
 
@@ -37,19 +41,21 @@ function TurbineStatusDisplay.new(turbineData)
 end
 
 function TurbineStatusDisplay:render(monitor)
-
-    -- Update values
-    self.uiElements.steamBar:setValuePercent(self.turbineData.steamPercent)
-    self.uiElements.powerBar:setValuePercent(self.turbineData.storedEnergyPercent)
-
-    self.uiElements.outputLabel:setValue( self.turbineData.productionRate )
-
     if monitor ~= nil then
         monitor.setTextColor(colors.white)
         monitor.setBackgroundColor(colors.black)
         monitor.clear()
 
-        TextElementBase.renderAll(monitor, self.uiElements)
+        if self.turbineData:isAvailable() then
+            -- Update values
+            self.uiElements.steamBar:setValuePercent(self.turbineData.steamPercent)
+            self.uiElements.powerBar:setValuePercent(self.turbineData.storedEnergyPercent)
+            self.uiElements.outputLabel:setValue( self.turbineData.productionRate )
+            TextElementBase.renderAll(monitor, self.uiElements)
+        else
+            self.uiElements.titleLabel:render(monitor)
+            self.offlineLabel:render(monitor)
+        end
     end 
 end
 

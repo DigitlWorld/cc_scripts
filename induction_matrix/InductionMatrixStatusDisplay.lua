@@ -24,6 +24,10 @@ function InductionMatrixStatusDisplay.new(matrixData)
 
     }
 
+    self.offlineLabel = Label.new( 1, 2, "NO CONNECTION" )
+    self.offlineLabel:setColors(colors.black, colors.red)
+    self.offlineLabel:setBlinking(true)
+
     self.uiElements.titleLabel:setWidth(25)
     self.uiElements.titleLabel:setColors(colors.gray, colors.black)
 
@@ -35,17 +39,20 @@ function InductionMatrixStatusDisplay.new(matrixData)
 end
 
 function InductionMatrixStatusDisplay:render(monitor)
-
-    -- Update values
-    self.uiElements.storedBar:setValuePercent(self.matrixData.storedEnergyPercent)
-    self.uiElements.storedValueLabel:setValue(self.matrixData.storedEnergy)
-
     if monitor ~= nil then
         monitor.setTextColor(colors.white)
         monitor.setBackgroundColor(colors.black)
         monitor.clear()
 
-        TextElementBase.renderAll(monitor, self.uiElements)
+        if self.matrixData:isAvailable() then
+            -- Update values
+            self.uiElements.storedBar:setValuePercent(self.matrixData.storedEnergyPercent)
+            self.uiElements.storedValueLabel:setValue(self.matrixData.storedEnergy)
+            TextElementBase.renderAll(monitor, self.uiElements)
+        else
+            self.uiElements.titleLabel:render(monitor)
+            self.offlineLabel:render(monitor)
+        end
     end 
 end
 
