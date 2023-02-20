@@ -18,12 +18,12 @@ while gStarting do
         reactor.scram()
     end
 
-    local boiler = peripheral.wrap("boilerValve")
-    local turbine = peripheral.wrap("turbineValve")
-    local monitor = peripheral.wrap("monitor")
+    local boiler = peripheral.find("boilerValve")
+    local turbine = peripheral.find("turbineValve")
+    local monitor = peripheral.find("monitor")
 
-    local indMatrix = peripheral.wrap("inductionPort")
-    local heater = peripheral.wrap("resistiveHeater")
+    local indMatrix = peripheral.find("inductionPort")
+    local heater = peripheral.find("resistiveHeater")
 
     -- If all of the parts are available, start up the main loop.
     if reactor ~= nil and boiler ~= nil and turbine ~= nil and indMatrix ~= nil and heater ~= nil then
