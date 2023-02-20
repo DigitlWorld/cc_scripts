@@ -190,7 +190,7 @@ function FissionStationControl:listenForTouch()
             local event, side, x, y = os.pullEvent("monitor_touch")
 
             if self.reactorData ~= nil and PeripheralData.isAvailable(self.reactorData) then
-                local reactor = self.reactor:getPeripheral()
+                local reactor = self.reactorData:getPeripheral()
                 if reactor.getStatus() then
                     reactor.scram()
                 else
