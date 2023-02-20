@@ -26,6 +26,10 @@ function BoilerStatusDisplay.new(boilerData)
         coolantBar = ValueBar.new( 11, 5, barWidth),
     }
 
+    self.offlineLabel = Label.new( 1, 2, "OFFLINE" )
+    self.offlineLabel:setColors(colors.black, colors.red)
+    self.offlineLabel:setBlinking(true)
+
     self.uiElements.titleLabel:setWidth(25)
     self.uiElements.titleLabel:setColors(colors.gray, colors.black)
 
@@ -38,19 +42,23 @@ function BoilerStatusDisplay.new(boilerData)
 end
 
 function BoilerStatusDisplay:render(monitor)
-
-    -- Update values
-    self.uiElements.heatedCoolantBar:setValuePercent(self.boilerData.heatedCoolantPercent)
-    self.uiElements.waterBar:setValuePercent(self.boilerData.waterPercent)
-    self.uiElements.steamBar:setValuePercent(self.boilerData.steamPercent)
-    self.uiElements.coolantBar:setValuePercent(self.boilerData.coolantPercent)
-
     if monitor ~= nil then
         monitor.setTextColor(colors.white)
         monitor.setBackgroundColor(colors.black)
         monitor.clear()
 
-        TextElementBase.renderAll(monitor, self.uiElements)
+        -- Update values
+        self.uiElements.heatedCoolantBar:setValuePercent(self.boilerData.heatedCoolantPercent)
+        self.uiElements.waterBar:setValuePercent(self.boilerData.waterPercent)
+        self.uiElements.steamBar:setValuePercent(self.boilerData.steamPercent)
+        self.uiElements.coolantBar:setValuePercent(self.boilerData.coolantPercent)
+
+        if self.boilerData:isAvailable() then
+            TextElementBase.renderAll(monitor, self.uiElements)
+        else
+            self.uiElements.titleLabel:render(monitor)
+            self.offlineLabel:render(monitor)
+        end
     end 
 end
 
