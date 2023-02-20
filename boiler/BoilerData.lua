@@ -1,23 +1,26 @@
-local BoilerData = {}
+local PeripheralData = require("data.PeripheralData")
+
+local BoilerData = setmetatable({}, {__index = PeripheralData})
 BoilerData.__index = BoilerData
 
 function BoilerData.new(boiler)
-    local self = setmetatable({
-        boiler = boiler,
-        heatedCoolantPercent = 0,
-        waterPercent = 0,
-        steamPercent = 0,
-        coolantPercent = 0
-    }, BoilerData)
-
+    local self = setmetatable(PeripheralData.new(boiler), BoilerData)
+    self:initData()
     return self
 end
 
-function BoilerData:update()
-    self.heatedCoolantPercent = self.boiler.getHeatedCoolantFilledPercentage()
-    self.waterPercent = self.boiler.getWaterFilledPercentage()
-    self.steamPercent = self.boiler.getSteamFilledPercentage()
-    self.coolantPercent = self.boiler.getCooledCoolantFilledPercentage()
+function BoilerData:fetchData()
+    self.heatedCoolantPercent = self.wrappedPeripheral.getHeatedCoolantFilledPercentage()
+    self.waterPercent = self.wrappedPeripheral.getWaterFilledPercentage()
+    self.steamPercent = self.wrappedPeripheral.getSteamFilledPercentage()
+    self.coolantPercent = self.wrappedPeripheral.getCooledCoolantFilledPercentage()
+end
+
+function BoilerData:initData()
+    self.heatedCoolantPercent = 0
+    self.waterPercent = 0
+    self.steamPercent = 0
+    self.coolantPercent = 0
 end
 
 return BoilerData

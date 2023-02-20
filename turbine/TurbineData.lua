@@ -1,21 +1,24 @@
-local TurbineData = {}
+local PeripheralData = require("data.PeripheralData")
+
+local TurbineData = setmetatable({}, {__index = PeripheralData})
 TurbineData.__index = TurbineData
 
 function TurbineData.new(turbine)
-    local self = setmetatable({
-        turbine = turbine,
-        storedEnergyPercent = 0,
-        steamPercent = 0,
-        productionRate = 0
-    }, TurbineData)
-
+    local self = setmetatable(PeripheralData.new(turbine), TurbineData)
+    self:initData()
     return self
 end
 
-function TurbineData:update()
-    self.storedEnergyPercent = self.turbine.getEnergyFilledPercentage()
-    self.steamPercent = self.turbine.getSteamFilledPercentage()
-    self.productionRate = self.turbine.getProductionRate()
+function TurbineData:fetchData()
+    self.storedEnergyPercent = self.wrappedPeripheral.getEnergyFilledPercentage()
+    self.steamPercent = self.wrappedPeripheral.getSteamFilledPercentage()
+    self.productionRate = self.wrappedPeripheral.getProductionRate()
+end
+
+function TurbineData:initData()
+    self.storedEnergyPercent = 0
+    self.steamPercent = 0
+    self.productionRate = 0
 end
 
 return TurbineData

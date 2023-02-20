@@ -1,17 +1,20 @@
-local ResistiveHeaterData = {}
+local PeripheralData = require("data.PeripheralData")
+
+local ResistiveHeaterData = setmetatable({}, {__index = PeripheralData})
 ResistiveHeaterData.__index = ResistiveHeaterData
 
 function ResistiveHeaterData.new(heater)
-    local self = setmetatable({
-        heater = heater,
-        energyUsage = 0
-    }, ResistiveHeaterData)
-
+    local self = setmetatable(PeripheralData.new(heater), ResistiveHeaterData)
+    self:initData()
     return self
 end
 
-function ResistiveHeaterData:update()
-    self.energyUsage = self.heater.getEnergyUsage()
+function ResistiveHeaterData:fetchData()
+    self.energyUsage = self.wrappedPeripheral.getEnergyUsage()
+end
+
+function ResistiveHeaterData:initData()
+    self.energyUsage = 0
 end
 
 return ResistiveHeaterData

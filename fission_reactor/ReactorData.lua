@@ -1,27 +1,30 @@
-local ReactorData = {}
+local PeripheralData = require("data.PeripheralData")
+
+local ReactorData = setmetatable({}, {__index = PeripheralData})
 ReactorData.__index = ReactorData
 
 function ReactorData.new(reactor)
-    local self = setmetatable({
-        reactor = reactor,
-        damagePercent = 0,
-        coolantPercent = 0,
-        heatedCoolantPercent = 0,
-        fuelPercent = 0,
-        wastePercent = 0,
-        active = false
-    }, ReactorData)
-
+    local self = setmetatable(PeripheralData.new(reactor), ReactorData)
+    self:initData()
     return self
 end
 
-function ReactorData:update()
-    self.damagePercent = self.reactor.getDamagePercent() / 100
-    self.coolantPercent = self.reactor.getCoolantFilledPercentage()
-    self.heatedCoolantPercent = self.reactor.getHeatedCoolantFilledPercentage()
-    self.fuelPercent = self.reactor.getFuelFilledPercentage()
-    self.wastePercent = self.reactor.getWasteFilledPercentage()
-    self.active = self.reactor.getStatus()
+function ReactorData:fetchData()
+    self.damagePercent = self.wrappedPeripheral.getDamagePercent() / 100
+    self.coolantPercent = self.wrappedPeripheral.getCoolantFilledPercentage()
+    self.heatedCoolantPercent = self.wrappedPeripheral.getHeatedCoolantFilledPercentage()
+    self.fuelPercent = self.wrappedPeripheral.getFuelFilledPercentage()
+    self.wastePercent = self.wrappedPeripheral.getWasteFilledPercentage()
+    self.active = self.wrappedPeripheral.getStatus()
+end
+
+function ReactorData:initData()
+    self.damagePercent = 0
+    self.coolantPercent = 0
+    self.heatedCoolantPercent = 0
+    self.fuelPercent = 0
+    self.wastePercent = 0
+    self.active = false
 end
 
 return ReactorData

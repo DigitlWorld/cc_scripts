@@ -1,21 +1,24 @@
-local InductionMatrixData = {}
+local PeripheralData = require("data.PeripheralData")
+
+local InductionMatrixData = setmetatable({}, {__index = PeripheralData})
 InductionMatrixData.__index = InductionMatrixData
 
 function InductionMatrixData.new(matrix)
-    local self = setmetatable({
-        matrix = matrix,
-        storedEnergyPercent = 0,
-        storedEnergy = 0,
-        energyNeeded = 0
-    }, InductionMatrixData)
-
+    local self = setmetatable(PeripheralData.new(matrix), InductionMatrixData)
+    self:initData()
     return self
 end
 
-function InductionMatrixData:update()
-    self.storedEnergyPercent = self.matrix.getEnergyFilledPercentage()
-    self.storedEnergy = self.matrix.getEnergy()
-    self.energyNeeded = self.matrix.getEnergyNeeded()
+function InductionMatrixData:fetchData()
+    self.storedEnergyPercent = self.wrappedPeripheral.getEnergyFilledPercentage()
+    self.storedEnergy = self.wrappedPeripheral.getEnergy()
+    self.energyNeeded = self.wrappedPeripheral.getEnergyNeeded()
+end
+
+function InductionMatrixData:initData()
+    self.storedEnergyPercent = 0
+    self.storedEnergy = 0
+    self.energyNeeded = 0
 end
 
 return InductionMatrixData
