@@ -8,7 +8,7 @@ function PeripheralData.new(wrappedPeripheral)
     }, PeripheralData)
 
     if wrappedPeripheral ~= nil then
-        name = peripheral.getName(wrappedPeripheral)
+        self.name = peripheral.getName(wrappedPeripheral)
     end
 
     return self
